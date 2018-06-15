@@ -11,17 +11,17 @@
   transform: scale(1.2);
   transition: all .3s ease-out;
 
+  &--is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
   &__inner {
     position: absolute;
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
-  }
-
-  &--is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
   }
 
   &__description {

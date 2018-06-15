@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -62,16 +62,21 @@
 
 	var _StickyHeader2 = _interopRequireDefault(_StickyHeader);
 
+	var _Modal = __webpack_require__(6);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var mobileMenu = new _MobileMenu2.default();
 	new _RevealOnScroll2.default((0, _jquery2.default)(".feature-item"), "85%");
 	new _RevealOnScroll2.default((0, _jquery2.default)(".testimonial"), "60%");
 	var stickyHeader = new _StickyHeader2.default();
+	var modal = new _Modal2.default();
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -118,9 +123,9 @@
 
 	exports.default = MobileMenu;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	 * jQuery JavaScript Library v2.2.4
@@ -9938,9 +9943,9 @@
 	}));
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -9999,15 +10004,15 @@
 
 	exports.default = RevealOnScroll;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
-	Waypoints - 4.0.0
-	Copyright © 2011-2015 Caleb Troughton
+	Waypoints - 4.0.1
+	Copyright © 2011-2016 Caleb Troughton
 	Licensed under the MIT license.
-	https://github.com/imakewebthings/waypoints/blog/master/licenses.txt
+	https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 	*/
 	(function() {
 	  'use strict'
@@ -10126,7 +10131,11 @@
 	  /* Public */
 	  /* http://imakewebthings.com/waypoints/api/enable-all */
 	  Waypoint.enableAll = function() {
-	    Waypoint.invokeAll('enable')
+	    Waypoint.Context.refreshAll()
+	    for (var waypointKey in allWaypoints) {
+	      allWaypoints[waypointKey].enabled = true
+	    }
+	    return this
 	  }
 
 	  /* Public */
@@ -10201,6 +10210,10 @@
 	    element.waypointContextKey = this.key
 	    contexts[element.waypointContextKey] = this
 	    keyCounter += 1
+	    if (!Waypoint.windowContext) {
+	      Waypoint.windowContext = true
+	      Waypoint.windowContext = new Context(window)
+	    }
 
 	    this.createThrottledScrollHandler()
 	    this.createThrottledResizeHandler()
@@ -10217,7 +10230,8 @@
 	  Context.prototype.checkEmpty = function() {
 	    var horizontalEmpty = this.Adapter.isEmptyObject(this.waypoints.horizontal)
 	    var verticalEmpty = this.Adapter.isEmptyObject(this.waypoints.vertical)
-	    if (horizontalEmpty && verticalEmpty) {
+	    var isWindow = this.element == this.element.window
+	    if (horizontalEmpty && verticalEmpty && !isWindow) {
 	      this.adapter.off('.waypoints')
 	      delete contexts[this.key]
 	    }
@@ -10286,6 +10300,9 @@
 
 	      for (var waypointKey in this.waypoints[axisKey]) {
 	        var waypoint = this.waypoints[axisKey][waypointKey]
+	        if (waypoint.triggerPoint === null) {
+	          continue
+	        }
 	        var wasBeforeTriggerPoint = axis.oldScroll < waypoint.triggerPoint
 	        var nowAfterTriggerPoint = axis.newScroll >= waypoint.triggerPoint
 	        var crossedForward = wasBeforeTriggerPoint && nowAfterTriggerPoint
@@ -10405,7 +10422,7 @@
 	        }
 
 	        contextModifier = axis.contextScroll - axis.contextOffset
-	        waypoint.triggerPoint = elementOffset + contextModifier - adjustment
+	        waypoint.triggerPoint = Math.floor(elementOffset + contextModifier - adjustment)
 	        wasBeforeScroll = oldTriggerPoint < axis.oldScroll
 	        nowAfterScroll = waypoint.triggerPoint >= axis.oldScroll
 	        triggeredBackward = wasBeforeScroll && nowAfterScroll
@@ -10459,6 +10476,7 @@
 	    }
 	    Context.refreshAll()
 	  }
+
 
 	  Waypoint.requestAnimationFrame = function(callback) {
 	    var requestFn = window.requestAnimationFrame ||
@@ -10749,9 +10767,9 @@
 	}())
 	;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -10804,5 +10822,72 @@
 
 	exports.default = StickyHeader;
 
-/***/ }
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Modal = function () {
+	  function Modal() {
+	    _classCallCheck(this, Modal);
+
+	    this.openModalButton = (0, _jquery2.default)(".open-modal");
+	    this.modal = (0, _jquery2.default)(".modal");
+	    this.closeModalButton = (0, _jquery2.default)(".modal__close");
+	    this.events();
+	  }
+
+	  _createClass(Modal, [{
+	    key: "events",
+	    value: function events() {
+	      // clicking the open modal button
+	      this.openModalButton.click(this.openModal.bind(this));
+
+	      // clicking the x close modal button
+	      this.closeModalButton.click(this.closeModal.bind(this));
+
+	      // pushes any key
+	      (0, _jquery2.default)(document).keyup(this.keyPressHandler.bind(this));
+	    }
+	  }, {
+	    key: "keyPressHandler",
+	    value: function keyPressHandler(e) {
+	      if (e.keyCode == 27) {
+	        this.closeModal();
+	      }
+	    }
+	  }, {
+	    key: "openModal",
+	    value: function openModal() {
+	      this.modal.addClass("modal--is-visible");
+	      return false;
+	    }
+	  }, {
+	    key: "closeModal",
+	    value: function closeModal() {
+	      this.modal.removeClass("modal--is-visible");
+	    }
+	  }]);
+
+	  return Modal;
+	}();
+
+	exports.default = Modal;
+
+/***/ })
 /******/ ]);

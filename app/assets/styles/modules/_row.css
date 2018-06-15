@@ -15,7 +15,7 @@
   }
 
   &--gutters-small {
-    margin-right: -45px
+    margin-right: -45px;
   }
 
   &--gutters > div {
@@ -62,6 +62,7 @@
     &__medium-8--smaller {
       width: 63%;
     }
+
   }
 
   @mixin atLarge {
@@ -92,9 +93,10 @@
     &__large-8--smaller {
       width: 63%;
     }
-  }
 
-  /* Begin equal height rules */
+  }
+  
+  /* Begin Equal Height Rules */
   &--equal-height-at-medium {
     @mixin atMedium {
       display: flex;
@@ -104,9 +106,9 @@
       float: none;
       display: flex;
     }
+
   }
 
-  /* Begin equal height rules */
   &--equal-height-at-large {
     @mixin atLarge {
       display: flex;
@@ -116,5 +118,7 @@
       float: none;
       display: flex;
     }
+
   }
+
 }

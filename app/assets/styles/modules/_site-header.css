@@ -8,9 +8,14 @@
   &--is-expanded {
     background-color: rgba($mainBlue, .55);
   }
-  
+
   @mixin atMedium {
     background-color: rgba($mainBlue, .3);
+    position: fixed;
+
+    &--dark {
+      background-color: rgba(23, 51, 72, .85);
+    }
   }
 
   &__btn-container {
@@ -31,6 +36,12 @@
     @mixin atMedium {
       left: auto;
       transform: translateX(0);
+      transition: transform .3s ease-out;
+
+      .site-header--dark & {
+        transform: scale(.57);
+        transition: transform .3s ease-out;
+      }
     }
   }
 
